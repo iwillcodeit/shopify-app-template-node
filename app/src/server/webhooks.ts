@@ -1,8 +1,6 @@
 import { DeliveryMethod } from "@shopify/shopify-api";
+import { type WebhookHandlersParam } from "@shopify/shopify-app-express";
 
-/**
- * @type {{[key: string]: import("@shopify/shopify-api").WebhookHandler}}
- */
 export default {
   /**
    * Customers can request their data from a store owner. When this happens,
@@ -13,7 +11,7 @@ export default {
   CUSTOMERS_DATA_REQUEST: {
     deliveryMethod: DeliveryMethod.Http,
     callbackUrl: "/api/webhooks",
-    callback: async (topic, shop, body, webhookId) => {
+    callback: async (_topic, _shop, body, _webhookId) => {
       const payload = JSON.parse(body);
       // Payload has the following shape:
       // {
@@ -45,7 +43,7 @@ export default {
   CUSTOMERS_REDACT: {
     deliveryMethod: DeliveryMethod.Http,
     callbackUrl: "/api/webhooks",
-    callback: async (topic, shop, body, webhookId) => {
+    callback: async (_topic, _shop, body, _webhookId) => {
       const payload = JSON.parse(body);
       // Payload has the following shape:
       // {
@@ -83,4 +81,4 @@ export default {
       // }
     },
   },
-};
+} satisfies WebhookHandlersParam;
