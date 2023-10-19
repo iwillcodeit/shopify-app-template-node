@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!--start-head-->
     <meta charset="UTF-8" />
 
     <!-- Ensures that the UI is properly scaled in the Shopify Mobile app -->
@@ -12,13 +13,15 @@
         // code, so that the vite server is properly enabled to run HMR
         const script = document.createElement("script");
         script.setAttribute("type", "module");
-        script.setAttribute("src", "/src/client/dev_embed.ts");
+        script.setAttribute("src", "./src/app/dev_embed.ts");
         document.getElementsByTagName("head")[0].append(script);
       }
     </script>
+    <!--head-->
+    <!--end-head-->
   </head>
   <body>
-    <div id="app"><!--index.jsx injects App.jsx here--></div>
-    <script type="module" src="/src/client/main.tsx"></script>
+    <div id="root"><!--root--></div>
+    <script type="module" src="src/app/entry.client.tsx"></script>
   </body>
 </html>

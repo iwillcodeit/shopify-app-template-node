@@ -15,6 +15,8 @@ coverage
 logs
 *.log
 
+.idea
+
 # ngrok tunnel file
 config/tunnel.pid
 
@@ -25,4 +27,6 @@ dist/
 extensions/*/build
 
 # Node library SQLite database
-database.sqlite
+app/database.sqlite
+
+

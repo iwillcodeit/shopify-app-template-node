@@ -12,6 +12,7 @@
     "generate": "shopify app generate",
     "deploy": "shopify app deploy"
   },
+  "type": "module",
   "dependencies": {
     "@shopify/app": "3.46.5",
     "@shopify/cli": "3.46.5"
