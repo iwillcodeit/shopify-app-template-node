@@ -1,3 +1,7 @@
+import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
+// @ts-expect-error
+import ShopifyFormat from "@shopify/i18next-shopify";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { match } from "@formatjs/intl-localematcher";
 // @ts-ignore
@@ -8,7 +12,6 @@ import {
   DEFAULT_LOCALE as DEFAULT_POLARIS_LOCALE,
   SUPPORTED_LOCALES as SUPPORTED_POLARIS_LOCALES,
 } from "@shopify/polaris";
-import { InitOptions } from "i18next";
 
 let _polarisTranslations: any;
 
@@ -30,6 +33,31 @@ export const DEFAULT_APP_LOCALE = "fr";
  */
 export const SUPPORTED_APP_LOCALES = ["en", "fr"] as const;
 export type Locale = (typeof SUPPORTED_APP_LOCALES)[number];
+
+let _userLocale: Locale;
+
+/**
+ * Retrieves the user's locale from the `locale` request parameter and matches it to supported app locales.
+ *
+ * Returns the default app locale if the user locale is not supported.
+ *
+ * @see https://shopify.dev/docs/apps/best-practices/internationalization/getting-started#step-2-get-access-to-the-users-locale
+ *
+ * @returns User locale
+ */
+function getUserLocale(): Locale {
+  if (_userLocale) {
+    return _userLocale;
+  }
+  const url = new URL(window.location.href);
+  const locale = url.searchParams.get("locale") || DEFAULT_APP_LOCALE;
+  _userLocale = match(
+    [locale],
+    SUPPORTED_APP_LOCALES as any,
+    DEFAULT_APP_LOCALE
+  ) as Locale;
+  return _userLocale;
+}
 
 /**
  * @private
@@ -191,19 +219,46 @@ async function loadPolarisTranslations(locale: PolarisLocale) {
   return (await POLARIS_LOCALE_DATA[locale]()).default;
 }
 
-export default {
-  debug:
-    typeof window !== "undefined" && process.env.NODE_ENV === "development",
-  // debug: process.env.NODE_ENV === "development",
-  fallbackLng: DEFAULT_APP_LOCALE,
-  supportedLngs: SUPPORTED_APP_LOCALES,
-  interpolation: {
-    // React escapes values by default
-    escapeValue: false,
-  },
-  react: {
-    // Wait for the locales to be loaded before rendering the app
-    // instead of using a Suspense component
-    useSuspense: false,
-  },
-} as const satisfies InitOptions;
+/**
+ * @async
+ * Asynchronously initializes i18next and loads Polaris translations.
+ *
+ * Intended to be called before rendering the app to ensure translations are present.
+ */
+export async function initI18n() {
+  const locale = getUserLocale();
+  await loadIntlPolyfills(locale);
+  await Promise.all([initI18next(locale), fetchPolarisTranslations(locale)]);
+}
+
+/**
+ * @private
+ * @async
+ * Asynchronously initializes i18next.
+ * @see https://www.i18next.com/overview/configuration-options
+ * @returns Promise of initialized i18next instance
+ */
+async function initI18next(locale: Locale) {
+  // @ts-ignore
+  return await i18next
+    .use(initReactI18next)
+    .use(ShopifyFormat)
+    .use(localResourcesToBackend())
+    .init({
+      // @ts-ignore
+      debug: process?.env?.NODE_ENV === "development",
+      // debug: process.env.NODE_ENV === "development",
+      fallbackLng: DEFAULT_APP_LOCALE,
+      supportedLngs: SUPPORTED_APP_LOCALES,
+      interpolation: {
+        // React escapes values by default
+        escapeValue: false,
+      },
+      react: {
+        // Wait for the locales to be loaded before rendering the app
+        // instead of using a Suspense component
+        useSuspense: false,
+      },
+      lng: locale,
+    });
+}

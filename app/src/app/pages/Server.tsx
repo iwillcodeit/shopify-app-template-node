@@ -1,6 +1,6 @@
-import { Server } from "../components/List.js";
+import { Server } from "../components/List";
 import { Card, Page, Layout, Spinner } from "@shopify/polaris";
-import { TitleBar } from "../AppBridge.js";
+import { TitleBar } from "@shopify/app-bridge-react";
 import { Suspense } from "react";
 
 export default function ServerPage() {

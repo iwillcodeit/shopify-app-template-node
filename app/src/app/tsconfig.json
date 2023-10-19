@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES6",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
@@ -9,20 +9,18 @@
     "allowSyntheticDefaultImports": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "NodeNext",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
+    "jsx": "react-jsx",
     "incremental": true,
     "sourceMap": true,
     "declaration": false,
     "types": [
-      "node",
-      "express"
+      "webpack-env"
     ],
-    "outDir": "dist"
   },
-  "include": ["src", "server.ts", "node_modules/vite/types/*"],
-  "exclude": ["./src/app"]
+  "include": ["./**/*"]
 }

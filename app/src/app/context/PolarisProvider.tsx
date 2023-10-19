@@ -1,9 +1,9 @@
 import { ReactNode, useCallback } from "react";
 import { AppProvider } from "@shopify/polaris";
-import { useNavigate } from "../AppBridge.js";
+import { useNavigate } from "@shopify/app-bridge-react";
 import "@shopify/polaris/build/esm/styles.css";
 import type { LinkLikeComponent } from "@shopify/polaris/build/ts/latest/src/utilities/link";
-import { getPolarisTranslations } from "../i18n.js";
+import { getPolarisTranslations } from "../i18n";
 
 const AppBridgeLink: LinkLikeComponent = function AppBridgeLink({
   url,

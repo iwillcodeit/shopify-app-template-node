@@ -2,6 +2,10 @@ import { createServer as createViteServer } from "vite";
 import initApp from "./src/app.js";
 import express from "express";
 
+import { Configuration } from "webpack";
+
+type T =
+
 const isTest = process.env.NODE_ENV === "test" || !!process.env.VITE_TEST_BUILD;
 
 async function createServer(isProd = process.env.NODE_ENV === "production") {

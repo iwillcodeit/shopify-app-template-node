@@ -8,11 +8,11 @@ import {
   Link,
   Text,
 } from "@shopify/polaris";
-import { TitleBar } from "../AppBridge.js";
+import { TitleBar } from "@shopify/app-bridge-react";
 import { useTranslation, Trans } from "react-i18next";
 
-import { trophyImage } from "../assets/index.js";
-import { ProductsCard } from "../components/ProductsCard.js";
+import { trophyImage } from "../assets/index";
+import { ProductsCard } from "../components/ProductsCard";
 
 export default function HomePage() {
   const { t } = useTranslation();

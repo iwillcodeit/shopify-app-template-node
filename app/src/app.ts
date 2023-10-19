@@ -5,8 +5,8 @@ import compression from "compression";
 import { fileURLToPath } from "node:url";
 import path, { dirname } from "node:path";
 
-import shopify from "./shopify.js";
-import apiRouter from "./routes/index.js";
+import shopify from "./shopify";
+import apiRouter from "./routes/index";
 import webhookHandlers from "./webhooks.js";
 import { readdir, readFile } from "fs/promises";
 

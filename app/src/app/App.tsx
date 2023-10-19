@@ -1,55 +1,50 @@
 import { useTranslation } from "react-i18next";
 
-import Routes, { Pages } from "./Routes.js";
+import Routes, { Pages } from "./Routes";
 
-import { PolarisProvider } from "./context/PolarisProvider.js";
-import { AppBridgeProvider } from "./context/AppBridgeProvider.js";
-import { QueryProvider } from "./context/QueryProvider.js";
-import React, { PropsWithChildren } from "react";
-import { NavigationMenu } from "./AppBridge.js";
+import { PolarisProvider } from "./context/PolarisProvider";
+import { AppBridgeProvider } from "./context/AppBridgeProvider";
+import { QueryProvider } from "./context/QueryProvider";
+import { NavigationMenu } from "@shopify/app-bridge-react";
+import { BrowserRouter } from "react-router-dom";
 
 export function App() {
-  // Any .tsx or .jsx files in /pages will become a route
-  // See documentation for <Routes /> for more info
-  const pages = import.meta.glob("./pages/**/!(*.test.[jt]sx)*.([jt]sx)", {
-    eager: true,
-  });
-
-  return (
-    <PolarisProvider>
-      <ClientAppBridge>
-        <QueryProvider>
-          <Routes pages={pages as Pages} />
-        </QueryProvider>
-      </ClientAppBridge>
-    </PolarisProvider>
-  );
-}
-
-function ClientAppBridge({ children }: PropsWithChildren) {
   const { t } = useTranslation();
 
-  if (import.meta.env.SSR) {
-    return <>{children}</>;
-  } else {
-    return (
-      <AppBridgeProvider>
-        <NavigationMenu
-          navigationLinks={[
-            {
-              label: t("NavigationMenu.pageName"),
-              destination: "/pagename",
-            },
-            {
-              label: "RSC",
-              destination: "/server",
-            },
-          ]}
-        />
-        {children}
-      </AppBridgeProvider>
-    );
-  }
+  const pagesContext = require.context(
+    "./pages",
+    true,
+    /^\.\/.*\/(?!.*\.test\.[jt]sx).*\.([jt]sx)$/
+  );
+
+  const pages = pagesContext.keys().reduce((acc, key) => {
+    acc[key] = pagesContext(key);
+    return acc;
+  }, {});
+
+  return (
+    <BrowserRouter>
+      <PolarisProvider>
+        <AppBridgeProvider>
+          <QueryProvider>
+            <NavigationMenu
+              navigationLinks={[
+                {
+                  label: t("NavigationMenu.pageName"),
+                  destination: "/pagename",
+                },
+                {
+                  label: "RSC",
+                  destination: "/server",
+                },
+              ]}
+            />
+            <Routes pages={pages as Pages} />
+          </QueryProvider>
+        </AppBridgeProvider>
+      </PolarisProvider>
+    </BrowserRouter>
+  );
 }
 
 export default App;

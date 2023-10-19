@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Card, TextContainer, Text } from "@shopify/polaris";
-import { Toast, ToastProps, useAuthenticatedFetch } from "../AppBridge.js";
+import {
+  Toast,
+  ToastProps,
+  useAuthenticatedFetch,
+} from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
-import { useAppQuery } from "../hooks/useAppQuery.js";
+import { useAppQuery } from "../hooks/useAppQuery";
 
 const emptyToastProps: ToastProps = { content: "", onDismiss() {} };
 
